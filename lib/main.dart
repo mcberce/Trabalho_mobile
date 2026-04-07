@@ -10,24 +10,18 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Tile('A', HitType.hit),
-              // grey
-              Tile('A', HitType.miss),
-              // yellow
-              Tile('A', HitType.partial),
-            ],
-          ),
+        appBar: AppBar(
+          title: Align(alignment: Alignment.centerLeft, child: Text('Birdle')),
         ),
+        body: Center(child: GamePage()),
       ),
     );
   }
 }
+
+
 
 class Tile extends StatelessWidget {
   const Tile(this.letter, this.hitType, {super.key});
@@ -53,3 +47,33 @@ class Tile extends StatelessWidget {
     );
   }
 }
+
+class GamePage extends StatelessWidget {
+  GamePage({super.key});
+
+  // This manages game logic, and is out of scope for this lesson.
+  final Game _game = Game();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        spacing: 5.0,
+        children: [
+          for (var guess in _game.guesses)
+            Row(
+              spacing: 5.0,
+              children: [
+                for (var letter in guess) Tile(letter.char, letter.type),
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+// PAREI NO PASSO 4 DA ETAPA 4
