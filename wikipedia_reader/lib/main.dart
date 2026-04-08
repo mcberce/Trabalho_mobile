@@ -17,15 +17,29 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Wikipedia Flutter'),
-        ),
-        body: const Center(
-          child: Text('Loading...'),
-        ),
+        appBar: AppBar(title: const Text('Wikipedia Flutter')),
+        body: const Center(child: Text('Loading...')),
       ),
     );
   }
 }
 
+class ArticleModel {
+  Future<Summary> getRandomArticleSummary() async {
+    final uri = Uri.https(
+      'en.wikipedia.org',
+      '/api/rest_v1/page/random/summary',
+    );
+    final response = await get(uri);
+
+    if (response.statusCode != 200) {
+      throw HttpException('Failed to update resource');
+    }
+
+    return Summary.fromJson(jsonDecode(response.body));
+  }
+}
+
+
 //PROFESSORA EU ESQUECI DO 7,  MAS VOU DAR AGR
+//PATREI NO PASSO 1 DA ETAPA 11
