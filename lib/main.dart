@@ -29,9 +29,11 @@ class Tile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 60,
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 500),
+      curve: Curves.bounceIn, // NEW
       height: 60,
+      width: 60,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade300),
         color: switch (hitType) {
@@ -41,12 +43,27 @@ class Tile extends StatelessWidget {
           _ => Colors.white,
         },
       ),
+      child: Center(
+        child: Text(
+          letter.toUpperCase(),
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+      ),
     );
   }
 }
 
 
-class GamePage extends StatelessWidget {
+
+
+class GamePage extends StatefulWidget {
+  GamePage({super.key});
+
+  @override
+  State<GamePage> createState() => _GamePageState();
+}
+
+class _GamePageState extends State<GamePage> {
   final Game _game = Game();
 
   @override
@@ -54,19 +71,23 @@ class GamePage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
-        spacing: 5.0,
         children: [
           for (var guess in _game.guesses)
             Row(
-              spacing: 5.0,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                for (var letter in guess) Tile(letter.char, letter.type),
+                for (var letter in guess)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 2.5),
+                    child: Tile(letter.char, letter.type),
+                  )
               ],
             ),
           GuessInput(
-            onSubmitGuess: (String guess) {
-              // TODO, handle guess
-              print(guess); // Temporary
+           onSubmitGuess: (String guess) {
+              setState(() { // NEW
+                _game.guess(guess);
+              });
             },
           ),
         ],
@@ -74,6 +95,8 @@ class GamePage extends StatelessWidget {
     );
   }
 }
+
+
 
 
 class GuessInput extends StatelessWidget {
